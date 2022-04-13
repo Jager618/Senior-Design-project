@@ -10,24 +10,35 @@
 PID pid = PID(0.1, 255, 0, 0.1, 0.01, 5);
 const int ledPin = 16;
 
-const int freq = 32; // 32 hz
-const int PWM_Ch = 5;
-const int Input_Ch1 = 0;
-const int Input_Ch2 = 0;
-const int resolution = 8; // 0-255 duty cycle range
-unsigned int DutyCycle = 127;
+const int freq = 32; // 32 hz PWM
+const int PWM_Ch = 7;
+const int Input_Ch1 = 1;
+const int Input_Ch2 = 2;
+const int Input_Ch3 = 3;
+const int Input_Ch4 = 4;
+const int Input_Ch5 = 5;
+const int Input_Ch6 = 6;
 
-// This can be the initial/input stretch sensor signal for testing
-double sensor_test = 50;
+
+const int resolution = 8; // This resolution gives a 0-255 duty cycle range
+unsigned int DutyCycle = 127; //Initial 50% duty cycle. 100% = fully grasped hand, 50% = halfway grasped
+
+// This can be the initial flex sensor signal for testing corresponding to 0 degree flex-
+// Actual range is 3.3 - 1.5V from flex sensor, 3.3v being unflexed fingers, 1.5V fully flexed fingers
+double sensor_test = 2;
 
 void setup() {
 }
 
 void loop() {
-  // Reference Input from FABRIK Href
+  // Reference Input from FABRIK Href (may need SPI for this)
   double Href = ledcRead(Input_Ch1);
-  //Measured output from stretch sensor
-  double output = ledcRead(Input_Ch2);
+  //Measured output from stretch sensors for each finger (5 total)
+  double feedback1 = ledcRead(Input_Ch2);
+  double feedback2 = ledcRead(Input_Ch3);
+  double feedback3 = ledcRead(Input_Ch4);
+  double feedback4 = ledcRead(Input_Ch5);
+  double feedback5 = ledcRead(Input_Ch6);
 
   //PID loop
   double DutyCycle = pid.calculate(Href, output);
