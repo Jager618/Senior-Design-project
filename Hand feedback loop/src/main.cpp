@@ -2,6 +2,8 @@
 
 #include "PID.h"
 #include <stdio.h>
+#include "WiFi.h"
+#include "HTTPClient.h"
 
 
 // Test the PID controller code and will be used to tune gains 
@@ -27,19 +29,62 @@ unsigned int DutyCycle = 127; //Initial 50% duty cycle. 100% = fully grasped han
 // Actual range is 3.3 - 1.5V from flex sensor, 3.3v being unflexed fingers, 1.5V fully flexed fingers
 double sensor_test = 2;
 
+// Wifi credentials
+const char* ssid = "Big Gaming Gamers 2.4g";
+const char* password = "1234123412341";
+
+
 void setup() {
+  Serial.begin(115200);
+  delay(4000);
+  WiFi.begin(ssid, password);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi..");
+  }
+  
+  Serial.println("Connected to the WiFi network");
 }
 
 void loop() {
-  // Reference Input from FABRIK Href (may need SPI for this)
-  double Href = ledcRead(Input_Ch1);
+  
+  double Href;
+  
+  // Reference Input from Jetson Nano using HTTP
+  if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+  
+    HTTPClient http;
+  
+    http.begin(" "); //Specify the URL
+    int httpCode = http.GET(); //Make the request
+  
+    if (httpCode > 0) { //Check for the returning code
+  
+        String payload = http.getString();
+        Href = payload;
+        Serial.println(httpCode);
+        Serial.println(payload);
+      }
+  
+    else {
+      Serial.println("Error on HTTP request");
+    }
+  
+    http.end(); //Free the resources
+  }
+  
+  delay(10000);
+ 
   //Measured output from stretch sensors for each finger (5 total)
   double feedback1 = ledcRead(Input_Ch2);
   double feedback2 = ledcRead(Input_Ch3);
   double feedback3 = ledcRead(Input_Ch4);
   double feedback4 = ledcRead(Input_Ch5);
   double feedback5 = ledcRead(Input_Ch6);
-
+  
+  // Compare flex sensor feedback to estimate position (1.5V = fully flexed/grasped hand)
+  
   //PID loop
   double DutyCycle = pid.calculate(Href, output);
 
