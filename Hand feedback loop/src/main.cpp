@@ -29,9 +29,13 @@ unsigned int DutyCycle = 127; //Initial 50% duty cycle. 100% = fully grasped han
 // Actual range is 3.3 - 1.5V from flex sensor, 3.3v being unflexed fingers, 1.5V fully flexed fingers
 double sensor_test = 2;
 
-// Wifi credentials
-const char* ssid = "Big Gaming Gamers 2.4g";
-const char* password = "1234123412341";
+// Wifi credentials for router used in project
+//const char* ssid = "Big Gaming Gamers 2.4g";
+//const char* password = "1234123412341";
+
+// credentials for my home internet
+const char* ssid = "Mirror March";
+const char* password = "5andared";
 
 
 void setup() {
@@ -56,7 +60,7 @@ void loop() {
   
     HTTPClient http;
   
-    http.begin(" "); //Specify the URL
+    http.begin("http://api.thingspeak.com/update?api_key=9UFD8N6EX92CGEIF"); //Specify the URL
     int httpCode = http.GET(); //Make the request
   
     if (httpCode > 0) { //Check for the returning code
