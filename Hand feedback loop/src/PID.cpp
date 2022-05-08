@@ -10,7 +10,7 @@ class PIDImpl
     public:
         PIDImpl( double dt, double max, double min, double Kp, double Kd, double Ki );
         ~PIDImpl();
-        double calculate( double setpoint, double current_val);
+        double Update( double setpoint, double current_val);
 
     private:
         double _dt;
@@ -28,9 +28,10 @@ PID::PID( double dt, double max, double min, double Kp, double Kd, double Ki )
 {
     pid1 = new PIDImpl(dt,max,min,Kp,Kd,Ki);
 }
-double PID::calculate( double setpoint, double current_val )
+
+double PID::Update( double setpoint, double current_val )
 {
-    return pid1->calculate(setpoint,current_val);
+    return pid1->Update(setpoint,current_val);
 }
 PID::~PID() 
 {
@@ -50,7 +51,7 @@ PIDImpl::PIDImpl( double dt, double max, double min, double Kp, double Kd, doubl
 {
 }
 
-double PIDImpl::calculate( double setpoint, double current_val )
+double PIDImpl::Update( double setpoint, double current_val )
 {
     double error = setpoint - current_val;
     

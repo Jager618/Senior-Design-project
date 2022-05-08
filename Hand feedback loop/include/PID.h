@@ -15,7 +15,7 @@ class PID
         PID( double dt, double max, double min, double Kp, double Kd, double Ki );
 
         // Returns the manipulated variable given a setpoint and current process value
-        double calculate( double setpoint, double current_val );
+        double Update( double setpoint, double current_val );
         
         ~PID();
 
