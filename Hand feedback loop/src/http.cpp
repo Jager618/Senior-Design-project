@@ -6,7 +6,8 @@
 #include "WiFi.h"
 #include "HTTPClient.h"
 
-void setup() {
+class httpimpl
+{
   Serial.begin(115200);
   delay(4000);
   WiFi.begin(ssid, password);
@@ -17,10 +18,9 @@ void setup() {
   }
   
   Serial.println("Connected to the WiFi network");
-}
+  }
 
-void loop() {
-  
+
   double Href;
   
   // Reference Input from Jetson Nano using HTTP
@@ -43,8 +43,7 @@ void loop() {
       Serial.println("Error on HTTP request");
     }
   
-    http.end(); //Free the resources
-  }
+  http.end(); //Free the resources
   
-  delay(10000);
-}
+  }
+

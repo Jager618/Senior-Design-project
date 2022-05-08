@@ -2,8 +2,10 @@
 // Kyle Atlas
 
 // Using Arduino library with esp32
-#include "Arduino.h"
+#include <iostream>
+#include <string>
 
+#include "Arduino.h"
 #include "PID.h"
 #include <stdio.h>
 #include "WiFi.h"
@@ -14,15 +16,14 @@
 
 // Sample time 0.1, Max 255, Min 0, Kp 0.1, Ki 0.01, Kd 5
 PID pid = PID(0.1, 255, 0, 0.1, 0.01, 5);
-const int ledPin = 16;
+const int PWM_Ch1 = 0;
 
-const int freq = 32; // 32 hz PWM
 // PWM output pins to solenoid valves
-const int PWM_Ch1 = 14;
-const int PWM_Ch2 = 25;
-const int PWM_Ch3 = 26;
-const int PWM_Ch4 = 27;
-const int PWM_Ch5 = 33;
+const int PWM_Pin1 = 14;
+const int PWM_Pin2 = 25;
+const int PWM_Pin3 = 26;
+const int PWM_Pin4 = 27;
+const int PWM_Pin5 = 33;
 
 //Flex sensor feedback- ADC pins
 const int Input_Ch1 = 32;
@@ -31,9 +32,10 @@ const int Input_Ch3 = 35;
 const int Input_Ch4 = 36;
 const int Input_Ch5 = 39;
 
-
+// PWM properties
 const int resolution = 8; // This resolution gives a 0-255 duty cycle range
 unsigned int DutyCycle = 127; //Initial 50% duty cycle. 100% = fully grasped hand
+const int freq = 32; // 32 hz PWM
 
 // This can be the initial flex sensor signal for testing corresponding to 0 degree flex-
 // Actual range is 3.3 - 1.5V from flex sensor, 3.3v being unflexed fingers, 1.5V fully flexed fingers
@@ -46,6 +48,13 @@ const char* password = "5andared";
 
 void setup() {
   Serial.begin(115200);
+
+  pinMode(PWM_Pin1, OUTPUT);
+  pinMode(PWM_Pin2, OUTPUT);
+  pinMode(PWM_Pin3, OUTPUT);
+  pinMode(PWM_Pin4, OUTPUT);
+  pinMode(PWM_Pin5, OUTPUT);
+
   delay(4000);
   WiFi.begin(ssid, password);
   
@@ -100,10 +109,10 @@ void loop() {
 
   // Output PWM signal 
   // Using ledc to generate arbitrary PWM signal
-  ledcWrite(PWM_Ch1,DutyCycle);
-  ledcWrite(PWM_Ch2,DutyCycle);
-  ledcWrite(PWM_Ch3,DutyCycle);
-  ledcWrite(PWM_Ch4,DutyCycle);
-  ledcWrite(PWM_Ch5,DutyCycle);
+  ledcWrite(PWM_Pin1,DutyCycle);
+  ledcWrite(PWM_Pin2,DutyCycle);
+  ledcWrite(PWM_Pin3,DutyCycle);
+  ledcWrite(PWM_Pin4,DutyCycle);
+  ledcWrite(PWM_Pin5,DutyCycle);
     
 }
